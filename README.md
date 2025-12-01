@@ -1,0 +1,109 @@
+# Eventure - Event Booking System
+
+Eventure is a full-stack event management and booking application designed to provide a seamless experience for users to discover and book events, and for administrators to manage them.
+
+## 🚀 Features
+
+### User Features
+*   **Authentication**: Secure User Registration and Login using JWT (JSON Web Tokens).
+*   **Event Discovery**: 
+    *   Browse upcoming events with a modern, responsive UI.
+    *   **Search & Filter**: Find events by title or location.
+    *   **Detailed View**: View comprehensive event details including description, date, location, and pricing.
+*   **Booking System**:
+    *   **Ticket Types**: Choose from various ticket categories (e.g., VIP, General Admission) with real-time availability.
+    *   **Checkout Flow**: Specify ticket count, payment method, and special requests.
+    *   **Validation**: Prevents booking of past events and enforces ticket limits (max 10 per booking).
+    *   **Concurrency Control**: Atomic database updates ensure no overbooking of seats.
+*   **User Dashboard**: 
+    *   **My Bookings**: View a history of all confirmed bookings with status and total cost.
+
+### Admin Features
+*   **Role-Based Access Control (RBAC)**: Secure Admin Dashboard accessible only to users with the 'admin' role.
+*   **Event Management**: Create new events with multiple ticket types and capacity settings.
+*   **Booking Oversight**: View a comprehensive list of all bookings across the platform.
+
+## 🛠️ Tech Stack
+
+### Frontend
+*   **React (Vite)**: Fast and modern UI library.
+*   **Tailwind CSS**: Utility-first CSS framework for styling.
+*   **React Router**: For client-side routing.
+*   **Axios**: For API communication.
+
+### Backend
+*   **Node.js & Express**: Robust server-side runtime and framework.
+*   **MongoDB & Mongoose**: NoSQL database for flexible data modeling.
+*   **JWT (jsonwebtoken)**: For stateless authentication.
+*   **Bcryptjs**: For secure password hashing.
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+*   Node.js installed.
+*   MongoDB installed and running locally (or a cloud URI).
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd EventManagementSystem
+```
+
+### 2. Backend Setup
+Navigate to the server directory and install dependencies:
+```bash
+cd server
+npm install
+```
+
+Create a `.env` file in the `server` directory:
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/eventure
+JWT_SECRET=your_super_secret_key_here
+```
+
+### 3. Frontend Setup
+Navigate to the client directory and install dependencies:
+```bash
+cd ../client
+npm install
+```
+
+### 4. Seed Database (Optional)
+Populate the database with test events:
+```bash
+cd ../server
+node seed.js
+```
+
+### 5. Run the Application
+You need to run both the backend and frontend servers.
+
+**Backend:**
+```bash
+cd server
+npm run dev
+```
+*Server runs on http://localhost:5000*
+
+**Frontend:**
+```bash
+cd client
+npm run dev
+```
+*Frontend runs on http://localhost:5173*
+
+## 👮 Admin Setup
+
+To access the Admin Dashboard, you need to promote a user to the 'admin' role.
+
+1.  Register a new user on the frontend (e.g., `admin@example.com`).
+2.  Run the admin promotion script from the server directory:
+    ```bash
+    node scripts/makeAdmin.js admin@example.com
+    ```
+3.  Log out and log back in to see the **Admin Dashboard** link in the Navbar.
+
+## 🧪 Verification
+*   **List Bookings**: Run `node list_bookings.js` in the server directory to see all bookings in the console.

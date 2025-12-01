@@ -37,6 +37,27 @@ Eventure is a full-stack event management and booking application designed to pr
 *   **JWT (jsonwebtoken)**: For stateless authentication.
 *   **Bcryptjs**: For secure password hashing.
 
+## 🧠 Technical Challenges & Solutions
+
+### 1. Concurrency & Overbooking Prevention
+**Challenge:** Preventing multiple users from booking the last available seat simultaneously (Race Condition).
+**Solution:** Implemented **Atomic Database Operations** using MongoDB's `findOneAndUpdate`. Instead of a traditional "Read-Modify-Write" pattern, we use a query that checks for available seats AND decrements the count in a single atomic transaction.
+```javascript
+// Atomic check and decrement
+await Event.findOneAndUpdate(
+  { _id: eventId, 'ticketTypes.availableSeats': { $gte: ticketCount } },
+  { $inc: { 'ticketTypes.$.availableSeats': -ticketCount } }
+);
+```
+
+### 2. Role-Based Access Control (RBAC)
+**Challenge:** Securing administrative routes without complicating the codebase.
+**Solution:** Designed a modular Middleware architecture. The `verifyToken` middleware handles authentication, while a dedicated `isAdmin` middleware checks for specific role permissions. This allows for easy scalability if new roles (e.g., 'organizer') are added in the future.
+
+### 3. Dynamic Ticket Management
+**Challenge:** Events need multiple ticket tiers (VIP, General) with independent stock tracking.
+**Solution:** Structured the MongoDB Schema to support an embedded array of `ticketTypes`. The booking logic was engineered to target specific sub-documents within the array for inventory management, ensuring precise tracking for each ticket category.
+
 ## ⚙️ Setup & Installation
 
 ### Prerequisites
@@ -59,8 +80,15 @@ npm install
 Create a `.env` file in the `server` directory:
 ```env
 PORT=5000
+# Local MongoDB
 MONGO_URI=mongodb://localhost:27017/eventure
+# OR MongoDB Atlas (Cloud)
+# MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/eventure
+
 JWT_SECRET=your_super_secret_key_here
+# Email Configuration (Optional)
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
 ```
 
 ### 3. Frontend Setup
